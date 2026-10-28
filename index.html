@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colegio Montano - Interactive Study Guide: Class 8 - Unit Synthesis & Portfolio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Nunito & Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            montano: {
+              blue: '#1269A8',
+              yellow: '#F7D615',
+              teal: '#54887D',
+              lightBlue: '#88B5C7',
+              olive: '#A6B046',
+              bgSoft: '#F2F5E9'
+            }
+          },
+          fontFamily: {
+            sans: ['Nunito', 'Segoe UI', 'Tahoma', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --montano-blue: #1269A8;
+      --montano-yellow: #F7D615;
+      --montano-teal: #54887D;
+      --montano-lightblue: #88B5C7;
+      --montano-olive: #A6B046;
+      --montano-bgsoft: #F2F5E9;
+    }
+
+    body {
+      background-color: #E2E8F0;
+      font-family: 'Nunito', sans-serif;
+      color: #334155;
+    }
+
+    /* Whiteboard Frame Styling */
+    .whiteboard-frame {
+      background-color: var(--montano-bgsoft);
+      border: 12px solid #CBD5E1;
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #E2E8F0;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--montano-lightblue);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--montano-blue);
+    }
+
+    .tab-btn.active {
+      background-color: var(--montano-blue);
+      color: #FFFFFF;
+      border-bottom: 4px solid var(--montano-yellow);
+      transform: translateY(-2px);
+    }
+
+    .badge-time {
+      background-color: #E0F2FE;
+      color: #0369A1;
+      border: 1px solid #BAE6FD;
+    }
+
+    .concept-card {
+      transition: all 0.2s ease-in-out;
+    }
+    .concept-card:hover {
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body class="p-2 md:p-6 min-h-screen flex flex-col justify-center items-center">
+
+  <!-- Main Container / Digital Whiteboard Frame -->
+  <div id="whiteboard" class="whiteboard-frame w-full max-w-7xl mx-auto min-h-[90vh] flex flex-col overflow-hidden relative">
+    
+    <!-- Header Bar -->
+    <header class="bg-white border-b-2 border-slate-200 p-4 md:px-8 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-4">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" 
+             alt="Colegio Montano Logo" 
+             class="h-14 w-auto object-contain drop-shadow-sm"
+             onerror="this.src='https://placehold.co/150x60/1269A8/FFFFFF?text=Colegio+Montano'">
+        <div>
+          <h1 class="text-xl md:text-2xl font-extrabold text-montano-blue tracking-tight">COLEGIO MONTANO</h1>
+          <p class="text-xs md:text-sm font-bold text-montano-teal flex items-center gap-2">
+            <span>Psychology Study Guide</span> • <span>Class 8: Unit Synthesis & Portfolio</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:block text-right">
+          <span class="block text-xs font-semibold text-slate-500">Target Grade</span>
+          <span class="inline-block bg-montano-yellow/30 text-slate-800 text-xs px-2.5 py-0.5 rounded-full font-bold">11th Grade / 4th High School</span>
+        </div>
+        <button onclick="toggleFullscreen()" class="bg-montano-blue hover:bg-montano-teal text-white p-3 rounded-xl shadow transition duration-200 flex items-center gap-2 text-sm font-bold" title="Toggle Fullscreen">
+          <i class="fa-solid fa-expand"></i>
+          <span class="hidden md:inline">Fullscreen</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Interactive Horizontal Tabs Navigation -->
+    <nav class="bg-slate-100 border-b border-slate-300 px-4 pt-3 flex space-x-2 overflow-x-auto text-sm font-bold">
+      <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-sitemap text-montano-yellow"></i> 1. Concept Map (10m)
+      </button>
+      <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-display text-montano-yellow"></i> 2. Project Gallery (20m)
+      </button>
+      <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-folder-open text-montano-yellow"></i> 3. Portfolio Review (20m)
+      </button>
+      <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-brain text-montano-yellow"></i> 4. Reflection (10m)
+      </button>
+      <button onclick="switchTab('tab5')" id="btn-tab5" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-graduation-cap text-montano-yellow"></i> 5. Unit Assessment (10m)
+      </button>
+    </nav>
+
+    <!-- Main Content Display Container -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+
+      <!-- TAB 1: CONCEPT MAP RETRIEVAL (10 MIN) -->
+      <section id="tab1" class="tab-content block space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-blue shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 10 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Unit 1 Mind Map & Concept Retrieval</h2>
+            <p class="text-slate-600 text-sm">Review how all 8 classes interconnect to build a cohesive understanding of psychological science.</p>
+          </div>
+          <button onclick="speakText('Welcome to Class 8! Today we synthesize everything we have learned across Unit 1, showcase our case projects, assemble our final portfolios, and reflect on our learning journey.')" class="bg-montano-yellow/30 hover:bg-montano-yellow text-slate-800 text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1 transition">
+            <i class="fa-solid fa-volume-high"></i> Listen Intro
+          </button>
+        </div>
+
+        <!-- Interactive Concept Map Nodes -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-sm font-bold text-montano-blue flex items-center gap-2">
+            <i class="fa-solid fa-network-wired text-montano-yellow"></i> Click nodes to reveal core connections from Classes 1–7
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+
+            <!-- Node 1 -->
+            <div onclick="revealConcept(1)" id="concept-1" class="concept-card cursor-pointer p-4 bg-montano-bgSoft border-2 border-montano-blue rounded-2xl space-y-2">
+              <span class="text-[10px] font-extrabold uppercase text-montano-blue block">Class 1 & 2</span>
+              <h4 class="font-extrabold text-slate-800 text-sm">Definition & Goals</h4>
+              <p class="text-slate-600 text-[11px]">Scientific study of behavior & mental processes.</p>
+              <div id="concept-details-1" class="hidden pt-2 border-t border-slate-300 text-slate-700 space-y-1">
+                <span class="font-bold text-montano-blue block">4 Goals:</span>
+                <p>1. Describe<br>2. Explain<br>3. Predict<br>4. Influence</p>
+                <span class="font-bold text-montano-teal block mt-1">Key Fields:</span>
+                <p>Clinical, Cognitive, Social, I-O, Forensic, etc.</p>
+              </div>
+            </div>
+
+            <!-- Node 2 -->
+            <div onclick="revealConcept(2)" id="concept-2" class="concept-card cursor-pointer p-4 bg-montano-bgSoft border-2 border-slate-200 rounded-2xl space-y-2">
+              <span class="text-[10px] font-extrabold uppercase text-montano-teal block">Class 3 & 4</span>
+              <h4 class="font-extrabold text-slate-800 text-sm">Historical Roots</h4>
+              <p class="text-slate-600 text-[11px]">From Philosophy to Experimental Science (1879).</p>
+              <div id="concept-details-2" class="hidden pt-2 border-t border-slate-300 text-slate-700 space-y-1">
+                <span class="font-bold text-montano-teal block">Key Figures:</span>
+                <p>Descartes (Dualism)<br>Locke (Empiricism / Tabula Rasa)<br>Wundt (1st Lab, Introspection)</p>
+                <span class="font-bold text-montano-olive block mt-1">Early Schools:</span>
+                <p>Structuralism, Functionalism, Psychoanalysis, Behaviorism, Gestalt.</p>
+              </div>
+            </div>
+
+            <!-- Node 3 -->
+            <div onclick="revealConcept(3)" id="concept-3" class="concept-card cursor-pointer p-4 bg-montano-bgSoft border-2 border-slate-200 rounded-2xl space-y-2">
+              <span class="text-[10px] font-extrabold uppercase text-montano-olive block">Class 5 & 6</span>
+              <h4 class="font-extrabold text-slate-800 text-sm">Modern Perspectives</h4>
+              <p class="text-slate-600 text-[11px]">The 7 Contemporary Lenses of Psychology.</p>
+              <div id="concept-details-3" class="hidden pt-2 border-t border-slate-300 text-slate-700 space-y-1">
+                <span class="font-bold text-montano-olive block">7 Lenses:</span>
+                <p>Biological, Cognitive, Behavioral, Psychodynamic, Humanistic, Sociocultural, Evolutionary.</p>
+                <span class="font-bold text-montano-blue block mt-1">Framework:</span>
+                <p>The integrated <strong>Biopsychosocial Model</strong>.</p>
+              </div>
+            </div>
+
+            <!-- Node 4 -->
+            <div onclick="revealConcept(4)" id="concept-4" class="concept-card cursor-pointer p-4 bg-montano-bgSoft border-2 border-slate-200 rounded-2xl space-y-2">
+              <span class="text-[10px] font-extrabold uppercase text-slate-700 block">Class 7 & 8</span>
+              <h4 class="font-extrabold text-slate-800 text-sm">Application & Synthesis</h4>
+              <p class="text-slate-600 text-[11px]">Case analysis, peer review, and portfolio.</p>
+              <div id="concept-details-4" class="hidden pt-2 border-t border-slate-300 text-slate-700 space-y-1">
+                <span class="font-bold text-slate-800 block">Practical Tools:</span>
+                <p>4-Step Case Protocol<br>Multi-perspective intervention<br>Unit Portfolio & Self-Evaluation</p>
+              </div>
+            </div>
+
+          </div>
+
+          <p class="text-[11px] text-slate-500 italic text-center">Click on any card to expand or collapse its underlying conceptual breakdown.</p>
+        </div>
+      </section>
+
+      <!-- TAB 2: PROJECT GALLERY (20 MIN) -->
+      <section id="tab2" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-teal shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 20 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Class Project Showcase & Oral Presentation</h2>
+            <p class="text-slate-600 text-sm">Present selected team case studies or deliver your oral synthesis defense using the voice simulator below.</p>
+          </div>
+        </div>
+
+        <!-- Showcase Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Project Spotlight 1</span>
+            <h3 class="font-extrabold text-montano-blue text-sm">Analyzing Tech Addiction in Adolescents</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Synthesizing Behavioral rewards (notifications) with Cognitive distorted schemas (FOMO) and Biological dopamine feedback loops.</p>
+            <button onclick="speakText('Project 1 analyzed social media overuse by integrating dopamine reinforcement cycles with cognitive irrational beliefs regarding social inclusion.')" class="text-xs text-montano-blue font-bold hover:underline flex items-center gap-1">
+              <i class="fa-solid fa-volume-high"></i> Listen Summary
+            </button>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <span class="bg-teal-100 text-teal-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Project Spotlight 2</span>
+            <h3 class="font-extrabold text-montano-teal text-sm">Sports Performance & Anxiety Under Pressure</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Comparing Biological fight-or-flight sympathetic responses against Humanistic incongruence between real and ideal performance selves.</p>
+            <button onclick="speakText('Project 2 evaluated athletic choking by contrasting sympathetic nervous system fight-or-flight responses with humanistic incongruence in self-concept.')" class="text-xs text-montano-teal font-bold hover:underline flex items-center gap-1">
+              <i class="fa-solid fa-volume-high"></i> Listen Summary
+            </button>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <span class="bg-olive-100 text-olive-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full text-montano-olive uppercase">Project Spotlight 3</span>
+            <h3 class="font-extrabold text-montano-olive text-sm">Cultural Adaptation & Social Isolation</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Connecting Sociocultural norms and lack of social scaffolding with Evolutionary adaptive caution in unfamiliar group dynamics.</p>
+            <button onclick="speakText('Project 3 investigated student migration stress using sociocultural norms alongside evolutionary adaptive social hesitation.')" class="text-xs text-montano-olive font-bold hover:underline flex items-center gap-1">
+              <i class="fa-solid fa-volume-high"></i> Listen Summary
+            </button>
+          </div>
+        </div>
+
+        <!-- Oral Presentation Voice Simulator -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-sm font-bold text-montano-blue flex items-center gap-2">
+            <i class="fa-solid fa-microphone text-montano-yellow"></i> Live Final Oral Defense Simulator
+          </h3>
+          <p class="text-xs text-slate-600">Summarize your team's project. Mention at least two perspectives, key terms, and your main conclusion:</p>
+
+          <textarea id="oral-defense-input" rows="3" placeholder="Speak into the microphone or type your oral defense here..." class="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-montano-blue outline-none"></textarea>
+
+          <div class="flex flex-wrap gap-2">
+            <button onclick="startOralMic()" id="oral-mic-btn" class="bg-montano-blue hover:bg-montano-teal text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+              <i class="fa-solid fa-microphone"></i> Record Defense
+            </button>
+            <button onclick="evaluateDefense()" class="bg-montano-yellow hover:bg-amber-400 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+              <i class="fa-solid fa-square-poll-vertical"></i> Evaluate Defense
+            </button>
+          </div>
+
+          <div id="defense-result" class="hidden p-4 bg-montano-bgSoft rounded-xl border border-slate-200 text-xs space-y-2">
+            <span class="font-bold text-montano-blue block uppercase">Defense Feedback:</span>
+            <p id="defense-text" class="text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: PORTFOLIO REVIEW (20 MIN) -->
+      <section id="tab3" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-olive shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 20 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Final Portfolio Organization & Checklist</h2>
+            <p class="text-slate-600 text-sm">Organize and verify your 5 required unit artifacts before final submission.</p>
+          </div>
+        </div>
+
+        <!-- Portfolio Checklist Form -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-sm font-bold text-montano-blue flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-montano-yellow"></i> Artifact Checklist Verification
+          </h3>
+
+          <div class="space-y-3 text-xs">
+
+            <label class="flex items-center p-3 bg-montano-bgSoft rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+              <input type="checkbox" id="art-1" onchange="updatePortfolioProgress()" class="w-4 h-4 text-montano-blue rounded focus:ring-montano-blue mr-3">
+              <div>
+                <span class="font-bold text-slate-800">Artifact 1: Class 1 & 2 Foundations</span>
+                <p class="text-slate-500 text-[11px]">Definition of Psychology, 4 Goals worksheet, and Fields classification activity.</p>
+              </div>
+            </label>
+
+            <label class="flex items-center p-3 bg-montano-bgSoft rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+              <input type="checkbox" id="art-2" onchange="updatePortfolioProgress()" class="w-4 h-4 text-montano-blue rounded focus:ring-montano-blue mr-3">
+              <div>
+                <span class="font-bold text-slate-800">Artifact 2: Class 3 & 4 Historical Matrix</span>
+                <p class="text-slate-500 text-[11px]">Mind-Body debate notes, Wundt's 1879 lab synthesis, and 5 Early Schools chart.</p>
+              </div>
+            </label>
+
+            <label class="flex items-center p-3 bg-montano-bgSoft rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+              <input type="checkbox" id="art-3" onchange="updatePortfolioProgress()" class="w-4 h-4 text-montano-blue rounded focus:ring-montano-blue mr-3">
+              <div>
+                <span class="font-bold text-slate-800">Artifact 3: Class 5 & 6 Modern Perspectives</span>
+                <p class="text-slate-500 text-[11px]">Comparison table of 7 modern approaches and Biopsychosocial application.</p>
+              </div>
+            </label>
+
+            <label class="flex items-center p-3 bg-montano-bgSoft rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+              <input type="checkbox" id="art-4" onchange="updatePortfolioProgress()" class="w-4 h-4 text-montano-blue rounded focus:ring-montano-blue mr-3">
+              <div>
+                <span class="font-bold text-slate-800">Artifact 4: Class 7 Case Study Analysis</span>
+                <p class="text-slate-500 text-[11px]">Team case write-up with dual-perspective explanations and peer review rubric.</p>
+              </div>
+            </label>
+
+            <label class="flex items-center p-3 bg-montano-bgSoft rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+              <input type="checkbox" id="art-5" onchange="updatePortfolioProgress()" class="w-4 h-4 text-montano-blue rounded focus:ring-montano-blue mr-3">
+              <div>
+                <span class="font-bold text-slate-800">Artifact 5: Class 8 Metacognitive Reflection</span>
+                <p class="text-slate-500 text-[11px]">Self-assessment on growth, shift in perspective, and real-world utility.</p>
+              </div>
+            </label>
+
+          </div>
+
+          <!-- Progress Indicator -->
+          <div class="pt-4 border-t border-slate-200 space-y-2">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-700">Portfolio Completion:</span>
+              <span id="portfolio-score-text" class="text-montano-blue">0 / 5 Completed (0%)</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5">
+              <div id="portfolio-progress-bar" class="bg-montano-blue h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: REFLECTION (10 MIN) -->
+      <section id="tab4" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-yellow shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 10 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Individual Metacognitive Reflection</h2>
+            <p class="text-slate-600 text-sm">Reflect on how your understanding of human behavior evolved across this unit.</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-xs">
+          <div class="space-y-1">
+            <label class="block font-bold text-slate-700">1. How has your definition of "why people act the way they do" changed since Class 1?</label>
+            <textarea id="ref-q1" rows="2" placeholder="Before this unit, I thought behavior was mostly about choice, but now I understand..." class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-montano-blue outline-none"></textarea>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block font-bold text-slate-700">2. Which psychological perspective resonated most with you, and why?</label>
+            <textarea id="ref-q2" rows="2" placeholder="I found the Cognitive / Biological / Sociocultural perspective most compelling because..." class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-montano-teal outline-none"></textarea>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block font-bold text-slate-700">3. How will you apply psychological thinking to your everyday life or future career?</label>
+            <textarea id="ref-q3" rows="2" placeholder="I can use the biopsychosocial approach to better understand stress, improve study habits, or..." class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-montano-olive outline-none"></textarea>
+          </div>
+
+          <button onclick="saveReflection()" class="w-full bg-montano-blue hover:bg-montano-teal text-white font-bold py-2.5 rounded-xl transition shadow text-xs">
+            Save Reflection Responses
+          </button>
+
+          <div id="reflection-msg" class="hidden p-3 rounded-xl font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            <i class="fa-solid fa-circle-check mr-1"></i> Reflection successfully saved!
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: UNIT ASSESSMENT (10 MIN) -->
+      <section id="tab5" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-blue shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 10 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Unit 1 Exit Evaluation: Core Knowledge Check</h2>
+            <p class="text-slate-600 text-sm">Demonstrate your integrated mastery of Unit 1 foundational concepts.</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 text-xs">
+          <form id="unit-eval-form" onsubmit="submitUnitEval(event)" class="space-y-4">
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">1. What are the four main goals of psychology in chronological order?</label>
+              <select id="eval-q1" required class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-semibold">
+                <option value="">-- Select correct sequence --</option>
+                <option value="correct">Describe, Explain, Predict, Influence</option>
+                <option value="wrong1">Predict, Describe, Influence, Explain</option>
+                <option value="wrong2">Explain, Describe, Influence, Predict</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">2. Which year mark is recognized as the birth of formal experimental psychology, and by whom?</label>
+              <select id="eval-q2" required class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-semibold">
+                <option value="">-- Select correct answer --</option>
+                <option value="wrong1">1859 by Charles Darwin</option>
+                <option value="correct">1879 by Wilhelm Wundt</option>
+                <option value="wrong2">1900 by Sigmund Freud</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">3. Briefly state the main focus of the Biopsychosocial Model in modern psychology:</label>
+              <textarea id="eval-q3" required rows="2" placeholder="The model integrates biological traits, cognitive/mental processes, and sociocultural influences to explain human behavior holistically..." class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-montano-blue outline-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-montano-blue hover:bg-montano-teal text-white font-bold py-3 rounded-xl transition shadow text-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Submit Final Unit Exit Ticket
+            </button>
+          </form>
+
+          <div id="unit-eval-feedback" class="hidden bg-montano-bgSoft p-5 rounded-xl border border-montano-olive space-y-2">
+            <h4 class="text-sm font-bold text-montano-blue flex items-center gap-2">
+              <i class="fa-solid fa-trophy text-montano-yellow"></i> Unit 1 Completed!
+            </h4>
+            <p id="unit-eval-msg" class="text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Bar -->
+    <footer class="bg-white border-t border-slate-200 p-3 px-6 text-center text-xs text-slate-500 flex justify-between items-center">
+      <span>&copy; Colegio Montano - Social Sciences Department</span>
+      <span class="font-bold text-montano-blue">Psychology Course (11th Grade)</span>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    /* Tab Switcher Logic */
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.remove('hidden');
+      document.getElementById('btn-' + tabId).classList.add('active');
+    }
+
+    /* Fullscreen API Toggle */
+    function toggleFullscreen() {
+      const whiteboard = document.getElementById('whiteboard');
+      if (!document.fullscreenElement) {
+        whiteboard.requestFullscreen().catch(err => {
+          alert(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    /* Text-to-Speech Helper */
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Text-to-Speech is not supported in this browser.");
+      }
+    }
+
+    /* Concept Map Reveal */
+    function revealConcept(num) {
+      const det = document.getElementById(`concept-details-${num}`);
+      const card = document.getElementById(`concept-${num}`);
+      if (det.classList.contains('hidden')) {
+        det.classList.remove('hidden');
+        card.classList.add('border-montano-blue');
+      } else {
+        det.classList.add('hidden');
+      }
+    }
+
+    /* Oral Defense Mic Recognition */
+    function startOralMic() {
+      const btn = document.getElementById('oral-mic-btn');
+      const input = document.getElementById('oral-defense-input');
+
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        btn.classList.add('animate-pulse', 'bg-red-600');
+        btn.innerHTML = `<i class="fa-solid fa-microphone-slash"></i> Listening...`;
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+          const transcript = event.results[0][0].transcript;
+          input.value = transcript;
+          btn.classList.remove('animate-pulse', 'bg-red-600');
+          btn.innerHTML = `<i class="fa-solid fa-microphone"></i> Record Defense`;
+        };
+
+        recognition.onerror = function() {
+          btn.classList.remove('animate-pulse', 'bg-red-600');
+          btn.innerHTML = `<i class="fa-solid fa-microphone"></i> Record Defense`;
+          alert("Speech recognition error or permission denied.");
+        };
+      } else {
+        alert("Web Speech API is not supported in this browser. Please type your defense.");
+      }
+    }
+
+    function evaluateDefense() {
+      const text = document.getElementById('oral-defense-input').value.trim();
+      const res = document.getElementById('defense-result');
+      const textOutput = document.getElementById('defense-text');
+
+      if (!text) {
+        alert("Please enter or record an oral defense first.");
+        return;
+      }
+
+      res.classList.remove('hidden');
+      textOutput.innerHTML = `<strong>Great Defense Summary!</strong> You clearly synthesized key concepts from Unit 1. Your explanation effectively linked psychological perspectives to concrete case outcomes. Excellent work!`;
+      speakText("Great defense summary! You clearly synthesized key concepts from Unit 1.");
+    }
+
+    /* Portfolio Progress Update */
+    function updatePortfolioProgress() {
+      let count = 0;
+      for (let i = 1; i <= 5; i++) {
+        if (document.getElementById(`art-${i}`).checked) count++;
+      }
+      const pct = Math.round((count / 5) * 100);
+      document.getElementById('portfolio-score-text').innerText = `${count} / 5 Completed (${pct}%)`;
+      document.getElementById('portfolio-progress-bar').style.width = `${pct}%`;
+    }
+
+    /* Save Metacognitive Reflection */
+    function saveReflection() {
+      const msg = document.getElementById('reflection-msg');
+      msg.classList.remove('hidden');
+      speakText("Reflection responses successfully saved!");
+    }
+
+    /* Unit Evaluation Submission */
+    function submitUnitEval(e) {
+      e.preventDefault();
+      const q1 = document.getElementById('eval-q1').value;
+      const q2 = document.getElementById('eval-q2').value;
+      const feedbackBox = document.getElementById('unit-eval-feedback');
+      const feedbackMsg = document.getElementById('unit-eval-msg');
+
+      feedbackBox.classList.remove('hidden');
+
+      if (q1 === 'correct' && q2 === 'correct') {
+        feedbackMsg.innerHTML = `<strong>Outstanding Performance!</strong> You achieved a perfect score on the Unit 1 core knowledge check. You have successfully mastered the foundational definitions, goals, history, and perspectives of psychology!`;
+        speakText("Outstanding performance! You achieved a perfect score on the Unit 1 core knowledge check.");
+      } else {
+        feedbackMsg.innerHTML = `<strong>Unit Exit Ticket Submitted!</strong> Good effort. Review Classes 1 and 3 to reinforce the exact sequence of psychological goals and Wilhelm Wundt's 1879 milestone.`;
+        speakText("Unit exit ticket submitted!");
+      }
+    }
+  </script>
+</body>
+</html>
